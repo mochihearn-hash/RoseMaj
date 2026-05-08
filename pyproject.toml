@@ -1,0 +1,8 @@
+[project]
+name = "roselia-mahjong"
+version = "0.1.0"
+description = "A Roselia-themed lightweight riichi-like card game prototype."
+requires-python = ">=3.9"
+
+[tool.unittest]
+testpaths = ["tests"]

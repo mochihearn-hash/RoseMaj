@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReseMaj_Online</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <h1>ReseMaj_Online</h1>
+          <p>Roselia fan-made online mahjong-like card game</p>
+        </div>
+        <div id="connectionStatus" class="status-pill">Connecting</div>
+      </header>
+
+      <section id="homeView" class="panel">
+        <h2>开始游戏</h2>
+        <label>
+          昵称
+          <input id="nicknameInput" type="text" maxlength="20" placeholder="Your nickname" />
+        </label>
+
+        <div class="actions">
+          <button id="createRoomButton">Create Room</button>
+        </div>
+
+        <div class="join-row">
+          <label>
+            房间号
+            <input id="roomCodeInput" type="text" maxlength="8" placeholder="ABCDE" />
+          </label>
+          <button id="joinRoomButton">Join Room</button>
+        </div>
+
+        <div class="join-row">
+          <label>
+            AI 数量
+            <select id="aiCountInput">
+              <option value="1">1 AI</option>
+              <option value="2">2 AI</option>
+              <option value="3" selected>3 AI</option>
+            </select>
+          </label>
+          <button id="aiModeButton">AI Mode</button>
+        </div>
+      </section>
+
+      <section id="roomView" class="panel hidden">
+        <div class="section-title">
+          <h2>等待房间</h2>
+          <div>房间号：<strong id="roomCodeLabel"></strong></div>
+        </div>
+        <div id="playerList" class="player-list"></div>
+        <button id="readyButton">Ready</button>
+      </section>
+
+      <section id="gameView" class="hidden">
+        <div class="game-header panel">
+          <div>
+            <h2>游戏桌</h2>
+            <p id="turnLabel"></p>
+          </div>
+          <div class="stats">
+            <div>房间：<strong id="gameRoomCode"></strong></div>
+            <div>牌堆剩余：<strong id="deckRemaining">0</strong></div>
+          </div>
+        </div>
+
+        <section id="endGamePanel" class="panel end-panel hidden">
+          <h2>游戏结束</h2>
+          <p id="endSummary"></p>
+          <div id="restartStatus" class="restart-status"></div>
+          <div class="end-actions">
+            <button id="endReadyButton">Ready</button>
+            <button id="restartGameButton">重新开始</button>
+            <button id="newAiGameButton">新游戏</button>
+          </div>
+        </section>
+
+        <div class="table-grid">
+          <section class="panel">
+            <h3>玩家</h3>
+            <div id="gamePlayers" class="game-players"></div>
+          </section>
+
+          <section class="panel">
+            <h3>牌河</h3>
+            <div id="discardArea" class="discard-area"></div>
+          </section>
+        </div>
+
+        <section class="panel">
+          <div class="section-title">
+            <h3>你的手牌</h3>
+            <span id="handHint">点击选择，双击普通出牌</span>
+          </div>
+          <div id="handArea" class="hand-area"></div>
+        </section>
+
+        <section class="panel action-panel">
+          <button id="discardButton">Discard</button>
+          <button id="riichiButton">Riichi</button>
+          <button id="tsumoButton">Tsumo</button>
+          <button id="ronButton">Ron</button>
+          <button id="passRonButton">Pass Ron</button>
+        </section>
+      </section>
+
+      <section class="panel log-panel">
+        <h3>消息</h3>
+        <div id="messageLog" class="message-log"></div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
