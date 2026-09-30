@@ -31,6 +31,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     print("Roselia Mahjong Prototype")
     print(f"Players: {', '.join(player.name for player in game.players)}")
+    print(f"Dealer: {game.dealer.name}")
     print(f"Deck remaining after deal: {game.deck.remaining()}")
     print()
 

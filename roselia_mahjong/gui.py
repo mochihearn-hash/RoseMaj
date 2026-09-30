@@ -357,6 +357,8 @@ class RoseliaMahjongApp:
         self._clear_frame(self.players_frame)
         for index, player in enumerate(self.game.players):
             text = f"{player.name} | 手牌 {len(player.hand)} | 牌河 {len(player.discards)}"
+            if index == self.game.dealer_index:
+                text += " | 庄家"
             if player.riichi:
                 text += " | 立直"
             if index == self.game.current_player_index and not self.game.is_over:

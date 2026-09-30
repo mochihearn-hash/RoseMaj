@@ -73,6 +73,27 @@ class GameTests(unittest.TestCase):
         with self.assertRaises(InvalidAction):
             game.declare_riichi_and_discard(0, 0)
 
+    def test_setup_randomizes_dealer_and_starts_from_dealer(self):
+        starts = set()
+        for seed in range(200):
+            game = Game(["A", "B", "C", "D"], human_index=None, seed=seed)
+            game.setup()
+            self.assertEqual(game.dealer_index, game.current_player_index)
+            self.assertIs(game.dealer, game.current_player)
+            starts.add(game.dealer_index)
+
+        # Every seat must be able to become the dealer, otherwise the first
+        # seats keep acting first and win far more often than the others.
+        self.assertEqual(starts, {0, 1, 2, 3})
+
+    def test_setup_deals_four_cards_and_leaves_rest_in_deck(self):
+        game = Game(["A", "B", "C", "D"], human_index=None, seed=1)
+        game.setup()
+
+        for player in game.players:
+            self.assertEqual(len(player.hand), 4)
+        self.assertEqual(game.deck.remaining(), 85 - 16)
+
 
 if __name__ == "__main__":
     unittest.main()

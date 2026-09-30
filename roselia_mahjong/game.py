@@ -43,6 +43,7 @@ class Game:
             for index, name in enumerate(player_names)
         ]
         self.current_player_index = 0
+        self.dealer_index = 0
         self.result: Optional[GameResult] = None
 
     @property
@@ -53,9 +54,18 @@ class Game:
     def current_player(self) -> Player:
         return self.players[self.current_player_index]
 
+    @property
+    def dealer(self) -> Player:
+        return self.players[self.dealer_index]
+
     def setup(self, shuffle: bool = True) -> None:
         if shuffle:
             self.deck.shuffle()
+        # Pick the dealer at random and let them act first, as the documented
+        # rules require. Always starting from seat 0 handed the first two
+        # seats a large, measurable win-rate advantage.
+        self.dealer_index = self.rng.randrange(len(self.players))
+        self.current_player_index = self.dealer_index
         for _ in range(4):
             for player in self.players:
                 player.draw(self.deck.draw())
