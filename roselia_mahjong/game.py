@@ -14,6 +14,39 @@ class InvalidAction(RuntimeError):
     """Raised when a player attempts an illegal game action."""
 
 
+# 人数范围与 AI 座位名在这里统一定义，其它模块一律引用这里的常量。
+# 以前 2 / 4 这两个数字散落在 cli、gui 和后端里各写一遍，改一处漏一处。
+MIN_PLAYERS = 2
+MAX_PLAYERS = 5
+
+# AI 座位名，按座位顺序。五个名字刚好对应 Roselia 五名成员；
+# 人机混战时只用前 count-1 个，把 0 号位留给玩家。
+AI_PLAYER_NAMES: Tuple[str, ...] = (
+    "AI-Yukina",
+    "AI-Sayo",
+    "AI-Lisa",
+    "AI-Ako",
+    "AI-Rinko",
+)
+
+
+def build_player_names(
+    count: int,
+    human_name: str = "You",
+    ai_only: bool = False,
+) -> List[str]:
+    """按人数生成座位名，命令行和图形界面共用，保证两边一致。"""
+
+    if not MIN_PLAYERS <= count <= MAX_PLAYERS:
+        raise ValueError(
+            f"Player count must be between {MIN_PLAYERS} and {MAX_PLAYERS}, got {count}."
+        )
+
+    if ai_only:
+        return list(AI_PLAYER_NAMES[:count])
+    return [human_name, *AI_PLAYER_NAMES[: count - 1]]
+
+
 @dataclass(frozen=True)
 class GameResult:
     method: str
@@ -33,8 +66,11 @@ class Game:
         seed: Optional[int] = None,
         deck: Optional[Deck] = None,
     ) -> None:
-        if not 2 <= len(player_names) <= 4:
-            raise ValueError("The game supports 2 to 4 players.")
+        if not MIN_PLAYERS <= len(player_names) <= MAX_PLAYERS:
+            raise ValueError(
+                f"The game supports {MIN_PLAYERS} to {MAX_PLAYERS} players, "
+                f"got {len(player_names)}."
+            )
 
         self.rng = random.Random(seed)
         self.deck = deck or Deck(rng=self.rng)

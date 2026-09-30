@@ -1,29 +1,41 @@
 from __future__ import annotations
 
 import argparse
-from typing import Iterable, List, Optional, Sequence
+from typing import Iterable, Optional, Sequence
 
 from .ai import SimpleAI
 from .cards import Card
 from .deck import DeckEmptyError
-from .game import Game, GameResult, InvalidAction
+from .game import (
+    MAX_PLAYERS,
+    MIN_PLAYERS,
+    Game,
+    GameResult,
+    InvalidAction,
+    build_player_names,
+)
 from .rules import describe_waits, evaluate_hand, format_win_types
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser(description="Roselia Mahjong CLI prototype")
-    parser.add_argument("--players", type=int, default=4, help="Number of players: 2 to 4")
+    parser.add_argument(
+        "--players",
+        type=int,
+        default=4,
+        help=f"Number of players: {MIN_PLAYERS} to {MAX_PLAYERS}",
+    )
     parser.add_argument("--human-name", default="You", help="Human player name")
     parser.add_argument("--seed", type=int, default=None, help="Random seed for reproducible games")
     parser.add_argument("--ai-only", action="store_true", help="Run all seats as simple AI")
     parser.add_argument("--max-turns", type=int, default=None, help="Optional safety limit")
     args = parser.parse_args(argv)
 
-    if not 2 <= args.players <= 4:
-        print("Player count must be between 2 and 4.")
+    if not MIN_PLAYERS <= args.players <= MAX_PLAYERS:
+        print(f"Player count must be between {MIN_PLAYERS} and {MAX_PLAYERS}.")
         return 2
 
-    names = _build_player_names(args.players, args.human_name, args.ai_only)
+    names = build_player_names(args.players, args.human_name, args.ai_only)
     human_index = None if args.ai_only else 0
     game = Game(names, human_index=human_index, seed=args.seed)
     game.setup()
@@ -108,13 +120,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if game.result is not None:
         _print_result(game, game.result)
     return 0
-
-
-def _build_player_names(count: int, human_name: str, ai_only: bool) -> List[str]:
-    ai_names = ["AI-Sayo", "AI-Lisa", "AI-Ako", "AI-Rinko"]
-    if ai_only:
-        return ai_names[:count]
-    return [human_name, *ai_names[: count - 1]]
 
 
 def _choose_discard(game: Game, ai: SimpleAI, drawn_card: Card) -> int:

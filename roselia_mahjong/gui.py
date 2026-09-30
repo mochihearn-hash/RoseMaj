@@ -8,7 +8,7 @@ from typing import Iterable, Optional, Sequence
 from .ai import SimpleAI
 from .cards import Card
 from .deck import DeckEmptyError
-from .game import Game, GameResult, InvalidAction
+from .game import MAX_PLAYERS, MIN_PLAYERS, Game, GameResult, InvalidAction, build_player_names
 from .rules import describe_waits, format_win_types
 
 
@@ -91,7 +91,7 @@ class RoseliaMahjongApp:
         self.log_text.pack(fill=tk.X, padx=12, pady=(0, 12))
 
     def new_game(self) -> None:
-        names = ["You", "AI-Sayo", "AI-Lisa", "AI-Ako"][: self.player_count]
+        names = build_player_names(self.player_count, human_name="You", ai_only=False)
         self.game = Game(names, human_index=HUMAN_INDEX, seed=self.seed)
         self.game.setup()
         self.ai = SimpleAI(self.game.rng)
@@ -475,7 +475,12 @@ class RoseliaMahjongApp:
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser(description="Roselia Mahjong GUI prototype")
-    parser.add_argument("--players", type=int, default=4, choices=(2, 3, 4))
+    parser.add_argument(
+        "--players",
+        type=int,
+        default=4,
+        choices=range(MIN_PLAYERS, MAX_PLAYERS + 1),
+    )
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--smoke-test", action="store_true", help="Create and close the GUI.")
     args = parser.parse_args(argv)

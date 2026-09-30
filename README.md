@@ -76,7 +76,7 @@ run_online_server.bat
 - 显示房间号
 - 显示玩家列表
 - 玩家点击 Ready / Cancel Ready
-- 2 到 4 人且全员 Ready 后自动开始
+- 2 到 5 人且全员 Ready 后自动开始
 - 游戏开始后不可加入新玩家
 
 游戏页：
@@ -135,7 +135,7 @@ AI 策略和命令行交互被拆分到不同模块中，后续可以继续扩�
 
 ### 玩法概要
 
-- 支持 2 到 4 名玩家
+- 支持 2 到 5 名玩家
 - 默认 1 名人类玩家，其余为简单 AI
 - 每名玩家初始 4 张手牌
 - 轮到玩家时先摸 1 张
@@ -291,7 +291,7 @@ tests/
 
 ## Current prototype scope
 
-- 2 to 4 players
+- 2 to 5 players
 - One human player by default, remaining seats are simple AI players
 - Normal cards: 5 characters x 4 colors x 4 copies
 - Voice actor cards: one per character
@@ -303,7 +303,7 @@ tests/
 
 ## 当前原型范围
 
-- 支持 2 到 4 名玩家
+- 支持 2 到 5 名玩家
 - 默认 1 名人类玩家，其余座位为简单 AI
 - 实现普通牌、声优牌和完整牌堆
 - 实现洗牌、发牌、摸牌、弃牌

@@ -6,6 +6,7 @@ from typing import Any, Optional
 
 from roselia_mahjong.cards import Card
 from roselia_mahjong.deck import build_full_deck
+from roselia_mahjong.game import MAX_PLAYERS, MIN_PLAYERS
 from roselia_mahjong.rules import (
     describe_waits,
     evaluate_hand,
@@ -39,8 +40,10 @@ class OnlineGame:
     """Server-authoritative game state for one room."""
 
     def __init__(self, players: list[PlayerSeat], seed: Optional[int] = None) -> None:
-        if not 2 <= len(players) <= 4:
-            raise GameError("A game requires 2 to 4 players.")
+        if not MIN_PLAYERS <= len(players) <= MAX_PLAYERS:
+            raise GameError(
+                f"A game requires {MIN_PLAYERS} to {MAX_PLAYERS} players, got {len(players)}."
+            )
         self.players = players
         # Online games should not use a client-controllable seed. Tests may pass
         # a seed for reproducibility; production rooms use OS-backed randomness.

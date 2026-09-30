@@ -4,6 +4,8 @@ import asyncio
 from dataclasses import dataclass, field
 from typing import Any, Optional, Protocol
 
+from roselia_mahjong.game import AI_PLAYER_NAMES, MAX_PLAYERS, MIN_PLAYERS
+
 from .ai_player import choose_discard, choose_riichi_discard
 from .game_logic import GameError, OnlineGame
 from .models import PlayerSeat, card_to_dict, make_player_id, make_room_code
@@ -57,7 +59,7 @@ class RoomManager:
             room = self._require_room(room_code)
             if room.game is not None:
                 raise GameError("This room has already started.")
-            if len(room.players) >= 4:
+            if len(room.players) >= MAX_PLAYERS:
                 raise GameError("This room is full.")
             player = PlayerSeat(id=make_player_id(), nickname=nickname)
             room.players.append(player)
@@ -72,17 +74,17 @@ class RoomManager:
         ai_count: int = 3,
     ) -> tuple[str, str]:
         nickname = self._clean_nickname(nickname)
-        ai_count = max(1, min(3, ai_count))
+        # 1 个真人 + 最多 (MAX_PLAYERS - 1) 个 AI
+        ai_count = max(1, min(MAX_PLAYERS - 1, ai_count))
         async with self._lock:
             code = self._unique_room_code()
             human = PlayerSeat(id=make_player_id(), nickname=nickname, ready=True)
             players = [human]
-            ai_names = ["AI-Sayo", "AI-Lisa", "AI-Ako"]
             for index in range(ai_count):
                 players.append(
                     PlayerSeat(
                         id=make_player_id(),
-                        nickname=ai_names[index],
+                        nickname=AI_PLAYER_NAMES[index],
                         is_ai=True,
                         ready=True,
                     )
@@ -371,7 +373,7 @@ class RoomManager:
 
     def _can_start_ready_room(self, room: Room) -> bool:
         return (
-            2 <= len(room.players) <= 4
+            MIN_PLAYERS <= len(room.players) <= MAX_PLAYERS
             and all(player.connected for player in room.players if not player.is_ai)
             and all(player.ready for player in room.players)
         )
