@@ -5,3 +5,10 @@ __pycache__/
 .ruff_cache/
 .venv/
 venv/
+
+# BanG Dream! 官方卡面版权归 Bushiroad / Craft Egg 所有，
+# 只放在本地使用，不要提交到公开仓库。
+assets/card_art/
+
+# 输入法（搜狗）会把运行日志写进当前目录，与项目无关。
+debug.log
