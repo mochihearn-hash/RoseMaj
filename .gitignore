@@ -6,9 +6,8 @@ __pycache__/
 .venv/
 venv/
 
-# BanG Dream! 官方卡面版权归 Bushiroad / Craft Egg 所有，
-# 只放在本地使用，不要提交到公开仓库。
-assets/card_art/
-
 # 输入法（搜狗）会把运行日志写进当前目录，与项目无关。
 debug.log
+
+# 抓取脚本每次重写清单前会留的备份，属于本地中间产物，不入库。
+*.bak
